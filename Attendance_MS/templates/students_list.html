@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="content">
+        <h1>Students List</h1>
+        <table class="students-table">
+            <tr>
+                <th>Name</th>
+                <th>Roll Number</th>
+                <th>Subject</th>
+                <th>Present Attendance</th>
+                <th>Total Attendance</th>
+                <th>Attendance Percentage</th>
+            </tr>
+            {% for student_data in students %}
+                {% for attendance_data in student_data['attendance_data'] %}
+                    <tr>
+                        {% if loop.index0 == 0 %}
+                            <td rowspan="{{ student_data['attendance_data']|length }}">{{ student_data['name'] }}</td>
+                            <td rowspan="{{ student_data['attendance_data']|length }}">{{ student_data['roll_no'] }}</td>
+                        {% endif %}
+                        <td>{{ attendance_data['subject'] }}</td>
+                        <td>{{ attendance_data['present_attendance'] }}</td>
+                        <td>{{ attendance_data['total_attendance'] }}</td>
+                        <td>{{ attendance_data['attendance_percentage'] }}%</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </table>
+
+        <div class="pagination">
+            {% if num_pages > 1 %}
+                {% for page_num in range(1, num_pages + 1) %}
+                    {% if page_num == page %}
+                        <span class="current-page">{{ page_num }}</span>
+                    {% else %}
+                        <a href="{{ url_for('students_list', page=page_num) }}">{{ page_num }}</a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="students">
+            {% for student_data in students %}
+                <div class="student">
+                    <h3>{{ student_data['name'] }}</h3>
+                    <p>Roll Number: {{ student_data['roll_no'] }}</p>
+                    <table>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Present Attendance</th>
+                            <th>Total Attendance</th>
+                            <th>Attendance Percentage</th>
+                        </tr>
+                        {% for attendance_data in student_data['attendance_data'] %}
+                            <tr>
+                                <td>{{ attendance_data['subject'] }}</td>
+                                <td>{{ attendance_data['present_attendance'] }}</td>
+                                <td>{{ attendance_data['total_attendance'] }}</td>
+                                <td>{{ attendance_data['attendance_percentage'] }}%</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
